@@ -1,32 +1,35 @@
 package main
 
 import (
+	"fmt"
+	"log"
 	"net/http"
 
-	"github.com/go-chi/chi"
-	"github.com/go-chi/chi/middleware"
+	"github.com/gorilla/mux"
 )
 
-func homeHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("hello"))
+type ExampleRouter struct {
+	*mux.Router
 }
 
-func BookRoutes() chi.Router{
-	r:= chi.NewRouter()
-	BookHandler:= BookHandler{}
-	r.Get("/", BookHandler.ListBooks)
-	r.Post("/CreateBook", BookHandler.DeleteBook)
-	r.Get("/{id}", BookHandler.GetBooks)
-	r.Put("/{id}", BookHandler.UpdateBook)
-	r.Delete("/{id}", BookHandler.DeleteBook)
-	return r
+func NewExampleRouter() *ExampleRouter {
+	r := mux.NewRouter()
+
+	fs := http.FileServer(http.Dir("./web"))
+	r.PathPrefix("/").Handler(fs)
+
+	return &ExampleRouter{
+		Router: r,
+	}
 }
 
 func main() {
-	r := chi.NewRouter()
-	r.Use(middleware.Logger)
-	r.Get("/", homeHandler)
-	r.Mount("/books", BookRoutes())
+	http.Handle("/", NewExampleRouter())
 
-	http.ListenAndServe(":3001", r)
+	log.Println("Serving on port 8000")
+	err := http.ListenAndServe(":8000", nil)
+	if err != nil {
+		log.Fatalf("Server exited with: %v", err)
+	}
+	fmt.Println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
 }

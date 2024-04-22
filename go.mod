@@ -1,9 +1,5 @@
-module github.com/farzan-dehbashi/go_server
+module github.com/tilt-dev/tilt-example-go
 
-go 1.20
+go 1.21
 
-require (
-	github.com/go-chi/chi v1.5.5
-	github.com/go-chi/chi/v5 v5.0.12 // indirect
-	github.com/google/uuid v1.6.0 // indirect
-)
+require github.com/gorilla/mux v1.8.0
