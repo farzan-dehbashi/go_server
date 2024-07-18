@@ -8,9 +8,12 @@ import (
 	"github.com/tilt-dev/tilt-example-go/internal/handler"
 )
 
+func setupHandlers() {
+	http.Handle("/", handler.NewWebRouter())
+}
 func main() {
-	http.Handle("/", handler.NewExampleRouter())
-	err := http.ListenAndServe(":8000", nil)
+	setupHandlers()
+	err := http.ListenAndServe("", nil)
 	if err != nil {
 		log.Fatalf("Server exited with: %v", err)
 	}
